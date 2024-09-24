@@ -1,0 +1,13 @@
+{
+  "hi": "你好",
+  "login": {
+    "title": "登录 / 注册",
+    "account": "输入账号",
+    "password": "输入密码",
+    "submit": "GO",
+    "tips": "新用户可直接登录",
+    "error": {
+      "empty": "账号或密码不能为空"
+    }
+  }
+}

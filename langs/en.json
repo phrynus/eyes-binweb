@@ -1,0 +1,13 @@
+{
+  "hi": "HI",
+  "login": {
+    "title": "LOGIN / REGISTER",
+    "account": "Account",
+    "password": "Password",
+    "submit": "GO",
+    "tips": "New users can log in directly",
+    "error": {
+      "empty": "Account or password cannot be empty"
+    }
+  }
+}
