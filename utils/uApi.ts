@@ -46,7 +46,6 @@ class api {
       );
       form = form2;
     }
-    console.log(form.toString());
     form.append("sign", sign);
     try {
       const res = await fetch(baseUrl, {

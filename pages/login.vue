@@ -10,6 +10,7 @@ const { t } = useI18n();
 const account = ref();
 const password = ref();
 const submit = async () => {
+  const loadingInstance = ElLoading.service({ fullscreen: true });
   try {
     if (!account.value || !password.value) throw t("login.error.empty");
     const fp = await fpPromise;
@@ -18,7 +19,7 @@ const submit = async () => {
     const body = {
       account: account.value,
       password: password.value,
-      udid: result.visitorId
+      udid: result.visitorId,
     };
 
     const saveUserInfo = (res: any) => {
@@ -31,16 +32,20 @@ const submit = async () => {
       .run("isuser", { account: account.value })
       .then((res: any) => true)
       .catch((error: any) => false);
-    const isreg = await uApi.run(islogin ? "logon" : "reg", body).then((res: any) => {
-      if (!islogin) return true;
-      saveUserInfo(res);
-      return false;
-    });
+    const isreg = await uApi
+      .run(islogin ? "logon" : "reg", body)
+      .then((res: any) => {
+        if (!islogin) return true;
+        saveUserInfo(res);
+        return false;
+      });
     if (isreg) {
       await uApi.run("logon", body).then((res: any) => saveUserInfo(res));
     }
+    loadingInstance.close();
     navigateTo("/", { redirectCode: 301 });
   } catch (error: any) {
+    loadingInstance.close();
     ElNotification.error(error.msg || error || "Error");
   }
 };
@@ -54,12 +59,24 @@ const submit = async () => {
         <div class="title">{{ $t("login.title") }}</div>
         <div class="input-container">
           <label class="account">
-            <input type="text" v-model="account" :placeholder="$t('login.account')" />
+            <input
+              type="text"
+              v-model="account"
+              :placeholder="$t('login.account')"
+            />
           </label>
           <div style="height: 16px"></div>
-          <label class="password"> <input type="text" v-model="password" :placeholder="$t('login.password')" /> </label>
+          <label class="password">
+            <input
+              type="text"
+              v-model="password"
+              :placeholder="$t('login.password')"
+            />
+          </label>
           <div style="height: 28px"></div>
-          <button class="submit" @click="submit">{{ $t("login.submit") }}</button>
+          <button class="submit" @click="submit">
+            {{ $t("login.submit") }}
+          </button>
         </div>
         <div class="user-tips">{{ $t("login.tips") }}</div>
       </div>
@@ -80,7 +97,9 @@ const submit = async () => {
     height: 460px;
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.08), 0 1px 4px 0 rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 4px 32px 0 rgba(0, 0, 0, 0.08),
+      0 1px 4px 0 rgba(0, 0, 0, 0.04);
     .left {
       width: 50%;
       display: flex;
