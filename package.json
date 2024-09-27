@@ -20,8 +20,7 @@
     "pinia-plugin-persistedstate": "^4.0.1",
     "sass": "^1.79.3",
     "vue": "latest",
-    "vue-router": "latest",
-    "zipson": "^0.2.12"
+    "vue-router": "latest"
   },
   "packageManager": "pnpm@9.1.1+sha1.09ada6cd05003e0ced25fb716f9fda4063ec2e3b",
   "devDependencies": {
