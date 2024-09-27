@@ -1,5 +1,9 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import type { StateTree } from "pinia";
+import { parse, stringify } from "zipson";
+import RC4 from "crypto-js/rc4";
+import CryptoJS from "crypto-js"; // 需要用于编码处理
 
 interface UserInfo {
   uid: string;
@@ -14,6 +18,39 @@ interface UserInfo {
   vipExpDate: string;
   agent: string;
 }
+
+export class CustomRC4Serializer {
+  private secretKey: string;
+
+  constructor(secretKey: string) {
+    this.secretKey = secretKey;
+  }
+
+  serialize(value: StateTree): string {
+    try {
+      const serializedData = JSON.stringify(value);
+      return RC4.encrypt(serializedData, CryptoJS.enc.Utf8.parse(this.secretKey)).ciphertext.toString(CryptoJS.enc.Hex);
+    } catch (error) {
+      console.error("序列化或加密失败:", error);
+      return "";
+    }
+  }
+  deserialize(value: string): StateTree {
+    try {
+      const decryptedBytes = RC4.decrypt(
+        { ciphertext: CryptoJS.enc.Hex.parse(value) },
+        CryptoJS.enc.Utf8.parse(this.secretKey)
+      );
+      const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+      return JSON.parse(decryptedData) as StateTree;
+    } catch (error) {
+      console.error("解密或反序列化失败:", error);
+      return {} as StateTree;
+    }
+  }
+}
+
+const serializer = new CustomRC4Serializer("MGSVDTKTBUQRFGCTKVTDRAXW");
 
 export const useUserStore = defineStore(
   "user",
@@ -30,6 +67,11 @@ export const useUserStore = defineStore(
     return { token, info, updateTime, isLogin, isVip };
   },
   {
-    persist: true
+    persist: {
+      serializer: {
+        deserialize: serializer.deserialize,
+        serialize: serializer.serialize
+      }
+    }
   }
 );

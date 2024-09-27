@@ -12,6 +12,7 @@ definePageMeta({
 });
 
 async function heartbeatData() {
+  if (userStore.token == "") return navigateTo("/login", { redirectCode: 301 });
   if (Date.now() - userStore.updateTime > 1 * 60 * 1000) {
     try {
       await uApi.run("heartbeat", {}, userStore.token);
