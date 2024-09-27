@@ -7,16 +7,17 @@ definePageMeta({
     function () {
       const userStore = useUserStore();
     },
-    "auth"
-  ]
+    "auth",
+  ],
 });
-
 async function heartbeatData() {
   if (userStore.token == "") return navigateTo("/login", { redirectCode: 301 });
   if (Date.now() - userStore.updateTime > 1 * 60 * 1000) {
     try {
       await uApi.run("heartbeat", {}, userStore.token);
-      await uApi.run("info", {}, userStore.token).then((res) => (userStore.info = res));
+      await uApi
+        .run("info", {}, userStore.token)
+        .then((res) => (userStore.info = res));
       userStore.updateTime = Date.now();
     } catch (err) {
       console.error(err);
