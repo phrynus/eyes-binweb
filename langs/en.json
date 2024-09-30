@@ -1,9 +1,9 @@
 {
-  "hi": "HI",
+  "hi": "Hello",
   "login": {
-    "title": "LOGIN / REGISTER",
-    "account": "Account",
-    "password": "Password",
+    "title": "Login / Sign Up",
+    "account": "Enter Account",
+    "password": "Enter Password",
     "submit": "GO",
     "tips": "New users can log in directly",
     "error": {

@@ -5,7 +5,7 @@ import CryptoJS from "crypto-js";
 type Uoptions = {
   baseUrl: string;
   appKey: string;
-  appId: number;
+  appId: string;
   appIndex: string;
   appVer: string;
   rc4: string;
@@ -61,11 +61,12 @@ class api {
   }
 }
 
-export default new api({
+let a = new api({
   baseUrl: "https://u.binbot.cn",
   appKey: "YxrupPOFFXspbsierhsvvbdSnEKNOUe6",
-  appId: 1004,
+  appId: "1004",
   appIndex: "release",
   appVer: "1.0.0",
   rc4: "TMXFLBNBCPMKQNUCSKUAQFWY"
 });
+export default a

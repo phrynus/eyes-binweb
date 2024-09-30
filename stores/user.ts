@@ -1,7 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import type { StateTree } from "pinia";
-import { parse, stringify } from "zipson";
 import RC4 from "crypto-js/rc4";
 import CryptoJS from "crypto-js"; // 需要用于编码处理
 
@@ -31,7 +30,6 @@ export class CustomRC4Serializer {
       const serializedData = JSON.stringify(value);
       return RC4.encrypt(serializedData, CryptoJS.enc.Utf8.parse(this.secretKey)).ciphertext.toString(CryptoJS.enc.Hex);
     } catch (error) {
-      console.error("序列化或加密失败:", error);
       return "";
     }
   }
@@ -44,7 +42,6 @@ export class CustomRC4Serializer {
       const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
       return JSON.parse(decryptedData) as StateTree;
     } catch (error) {
-      console.error("解密或反序列化失败:", error);
       return {} as StateTree;
     }
   }

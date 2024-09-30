@@ -7,17 +7,15 @@ definePageMeta({
     function () {
       const userStore = useUserStore();
     },
-    "auth",
-  ],
+    "auth"
+  ]
 });
 async function heartbeatData() {
   if (userStore.token == "") return navigateTo("/login", { redirectCode: 301 });
   if (Date.now() - userStore.updateTime > 1 * 60 * 1000) {
     try {
       await uApi.run("heartbeat", {}, userStore.token);
-      await uApi
-        .run("info", {}, userStore.token)
-        .then((res) => (userStore.info = res));
+      await uApi.run("info", {}, userStore.token).then((res) => (userStore.info = res));
       userStore.updateTime = Date.now();
     } catch (err) {
       console.error(err);
@@ -31,8 +29,12 @@ onMounted(async () => {
   heartbeatData();
   setInterval(heartbeatData, 10000);
 });
+
+const layout = "home";
 </script>
 <template>
-  <NuxtPage />
+  <NuxtLayout :name="layout">
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 <style lang="scss" scoped></style>
